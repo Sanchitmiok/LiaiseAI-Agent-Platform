@@ -1,26 +1,23 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { authClient } from "@/lib/auth-client"; //import the auth client
-import { useRouter } from "next/navigation";
-export default function Home() {
-  const { data: session } = authClient.useSession();
-  const router = useRouter();
-  if (session) {
-    return (
-      <div>
-        <h1 className="text-2xl font-bold">Welcome, {session.user.name}!</h1>
-        <p className="text-lg">You are already signed in.</p>
-        <Button onClick={() => authClient.signOut()}>Sign Out</Button>
-      </div>
-    );
-  }else{
-    router.push("/sign-in");
+import { auth } from '@/lib/auth'
+import HomeView from '@/modules/home/ui/views/HomeView'
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
+import React from 'react'
+
+
+async function Home() {
+  // This is a server component, so we can use the auth client directly
+  // to get the session. => fast
+  const session = await auth.api.getSession({
+    headers : await headers(),
+  });
+
+  if( !session) {
+    redirect('/sign-in');
   }
-  return (
-    <div>
-   
 
-
-    </div>
-  );
+  return (<HomeView />
+  )
 }
+
+export default Home

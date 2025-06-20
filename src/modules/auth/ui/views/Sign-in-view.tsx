@@ -1,8 +1,7 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client"; //import the auth client
-import { useRouter } from "next/navigation";
-import {  z } from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -22,6 +21,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { AlertCircleIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters long"),
@@ -36,32 +36,53 @@ function SignInView() {
     },
   });
 
-  const [error, seterror] = useState<string | null>(null)
-  const [loading, setloading] = useState<boolean>(false)
-
+  const [error, seterror] = useState<string | null>(null);
+  const [loading, setloading] = useState<boolean>(false);
   const router = useRouter();
-  const onSubmit =  (data: z.infer<typeof formSchema>) => {
+
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
     seterror(null);
     setloading(true);
-     authClient.signIn.email({
-        email : data.email,
+    authClient.signIn.email(
+      {
+        email: data.email,
         password: data.password,
-        rememberMe: false
-}, {
+        rememberMe: false,
+        callbackURL: "/", // Redirect URL after sign-up
+      },
+      {
         onSuccess: () => {
-            setloading(false);
-            seterror(null);
-            router.push("/");
+          setloading(false);
+          seterror(null);
+          router.push("/"); // Redirect to home page after successful sign-in
         },
         onError: (ctx) => {
-            setloading(false);
-            seterror(ctx.error.message);
+          setloading(false);
+          seterror(ctx.error.message);
         },
-})
-    
+      }
+    );
   };
-
-  
+  const onSocial = (provider: "google" | "github") => {
+    seterror(null);
+    setloading(true);
+    authClient.signIn.social(
+      {
+        provider: provider,
+        callbackURL: "/", // Redirect URL after sign-up
+      },
+      {
+        onSuccess: () => {
+          setloading(false);
+          seterror(null);
+        },
+        onError: (ctx) => {
+          setloading(false);
+          seterror(ctx.error.message);
+        },
+      }
+    );
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -114,21 +135,33 @@ function SignInView() {
                     )}
                   />
                 </div>
-                {(!!error) && (
+                {!!error && (
                   <Alert variant="destructive" className="mt-4">
                     <AlertCircleIcon className="h-4 w-4" />
                     <AlertTitle>{error}</AlertTitle>
                   </Alert>
                 )}
 
-                <Button disabled={loading} className="w-full mt-4 cursor-pointer" type="submit">Sign-in</Button>
+                <Button
+                  disabled={loading}
+                  className="w-full mt-4 cursor-pointer"
+                  type="submit"
+                >
+                  Sign-in
+                </Button>
                 <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t mt-3">
                   <span className="bg-card text-muted-foreground relative z-10 px-2">
                     Or continue with
                   </span>
                 </div>
                 <div className="grid grid-cols-2 gap-4 mt-4">
-                  <Button disabled={loading} variant="outline" className="w-full cursor-pointer" type="button">
+                  <Button
+                    disabled={loading}
+                    variant="outline"
+                    className="w-full cursor-pointer"
+                    type="button"
+                    onClick={() => onSocial("google")}
+                  >
                     <Image
                       src="/google.svg"
                       alt="Google"
@@ -138,7 +171,13 @@ function SignInView() {
                     />
                     Google
                   </Button>
-                  <Button disabled={loading} variant="outline" className="w-full cursor-pointer" type="button">
+                  <Button
+                    disabled={loading}
+                    variant="outline"
+                    className="w-full cursor-pointer"
+                    type="button"
+                    onClick={() => onSocial("github")}
+                  >
                     <Image
                       src="/github.svg"
                       alt="GitHub"
@@ -153,7 +192,9 @@ function SignInView() {
                 <div className="text-center text-sm mt-4">
                   <p className="text-sm text-muted-foreground mt-4">
                     Don&apos;t have an account?{" "}
-                      <Link href="/sign-up" className="font-bold">Sign up</Link>
+                    <Link href="/sign-up" className="font-bold">
+                      Sign up
+                    </Link>
                   </p>
                 </div>
               </div>

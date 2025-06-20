@@ -1,7 +1,6 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client"; //import the auth client
-import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -22,15 +21,19 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { AlertCircleIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-const formSchema = z.object({
-  name: z.string().min(6 , "Name is required"),
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters long"),
-  confirmPassword: z.string().min(6, "Confirm Password")
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords do not match",
-  path: ["confirmPassword"],});
+const formSchema = z
+  .object({
+    name: z.string().min(6, "Name is required"),
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(6, "Password must be at least 6 characters long"),
+    confirmPassword: z.string().min(6, "Confirm Password"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 function SignUpView() {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -45,8 +48,8 @@ function SignUpView() {
 
   const [error, seterror] = useState<string | null>(null);
   const [loading, setloading] = useState<boolean>(false);
-
   const router = useRouter();
+
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     seterror(null);
     setloading(true);
@@ -55,13 +58,36 @@ function SignUpView() {
         name: data.name,
         // This is the email field, which is used for sign-in
         email: data.email,
-        password: data.password
+        password: data.password,
+        callbackURL: "/", // Redirect URL after sign-up
       },
       {
         onSuccess: () => {
           setloading(false);
           seterror(null);
-          router.push("/");
+          
+        },
+        onError: (ctx) => {
+          setloading(false);
+          seterror(ctx.error.message);
+        },
+      }
+    );
+  };
+
+  const onSocial = (provider: "google" | "github") => {
+    seterror(null);
+    setloading(true);
+    authClient.signIn.social(
+      {
+        provider: provider,
+        callbackURL: "/", // Redirect URL after sign-up
+      },
+      {
+        onSuccess: () => {
+          setloading(false);
+          seterror(null);
+          router.push("/"); // Redirect to home page after successful sign-up
         },
         onError: (ctx) => {
           setloading(false);
@@ -79,7 +105,9 @@ function SignUpView() {
             <form className="p-6 md:p-8" onSubmit={form.handleSubmit(onSubmit)}>
               <div>
                 <div className="flex flex-col items-center text-center">
-                  <h1 className="text-2xl font-bold">Lets&apos;s get started</h1>
+                  <h1 className="text-2xl font-bold">
+                    Lets&apos;s get started
+                  </h1>
                   <p className="text-muted-foreground text-sm">
                     Create your account to access all features
                   </p>
@@ -185,6 +213,7 @@ function SignUpView() {
                     variant="outline"
                     className="w-full cursor-pointer"
                     type="button"
+                    onClick={() => onSocial("google")}
                   >
                     <Image
                       src="/google.svg"
@@ -200,6 +229,7 @@ function SignUpView() {
                     variant="outline"
                     className="w-full cursor-pointer"
                     type="button"
+                    onClick={() => onSocial("github")}
                   >
                     <Image
                       src="/github.svg"
@@ -235,11 +265,11 @@ function SignUpView() {
         <p className="text-center text-sm text-muted-foreground">
           By signing up, you agree to our{" "}
           <Link href="/terms" className="font-bold underline">
-        Terms of Service
+            Terms of Service
           </Link>{" "}
           and{" "}
           <Link href="/privacy" className="font-bold underline">
-        Privacy Policy
+            Privacy Policy
           </Link>
           .
         </p>
