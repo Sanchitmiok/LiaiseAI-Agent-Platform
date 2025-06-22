@@ -1,27 +1,22 @@
 "use client";
-import Loading from "@/components/Loading";
-import { Button } from "@/components/ui/button";
-import { authClient } from "@/lib/auth-client"; //import the auth client
-import { useRouter } from "next/navigation";
+//import the auth client
+import { useTRPC } from "@/trpc/client";
+
+// TanStack Query ek library hai jo React apps me server se data fetch, cache, aur update karna bahut aasan bana deti hai.
+import { useQuery } from "@tanstack/react-query";
+// import { useRouter } from "next/navigation";
 export default function  HomeView() {
 
   // this is fetch request to get the session => relatively slow
-  const { data: session } = authClient.useSession();
-  const router = useRouter();
-  if (session) {
-    return (
-      <div>
-        <h1 className="text-2xl font-bold">Welcome, {session.user.name}!</h1>
-        <p className="text-lg">You are already signed in.</p>
-        <Button onClick={() => authClient.signOut(
-            {fetchOptions : {onSuccess : ()=> router.push("/sign-in")} } // this will redirect to sign-in page after sign out
-        )}>Sign Out</Button>
-      </div>
-    );
-  }
+  // const router = useRouter();
+  const trpc = useTRPC();
+  const {data} = useQuery(trpc.hello.queryOptions({text :"Sanchit"}));
+
+
   return (
     <div>
-   <Loading />
+      {data?.greeting}
+   {/* <Loading /> */}
     </div>
   );
 }
