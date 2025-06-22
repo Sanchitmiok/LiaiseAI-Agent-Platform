@@ -12,11 +12,15 @@ async function Home() {
     headers : await headers(),
   });
 
+
+
   if( !session) {
     redirect('/sign-in');
   }
 
-  return (<HomeView />
+  return (
+  
+  <HomeView />
   )
 }
 
