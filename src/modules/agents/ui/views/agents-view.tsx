@@ -8,14 +8,28 @@ export function AgentsView() {
   const trpc = useTRPC();
   const { data } = useSuspenseQuery(trpc.agents.getMany.queryOptions());
 
-  return <div>{JSON.stringify(data, null, 2)}</div>;
+  return (
+    <div>
+      
+        {JSON.stringify(data, null, 2)}
+    
+    </div>
+  );
 }
 
 export const AgentsviewLoading = () => {
-  return <Loading title="Loading Agents" description="Please wait for few seconds..."/>;
+  return (
+    <Loading
+      title="Loading Agents"
+      description="Please wait for few seconds..."
+    />
+  );
 };
 export const AgentsviewError = () => {
-  return <ErrorState title="Error loading state" description="Please try after few minutes"/>
+  return (
+    <ErrorState
+      title="Error loading state"
+      description="Please try after few minutes"
+    />
+  );
 };
-
-

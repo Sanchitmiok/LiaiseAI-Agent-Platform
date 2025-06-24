@@ -11,8 +11,9 @@ import React, { Suspense } from "react";
 async function page() {
   const queryClient = getQueryClient();
   void queryClient.prefetchQuery(trpc.agents.getMany.queryOptions());
-
   return (
+    //dehydrate: Server pe data ko “pack” karta hai.
+    //HydrationBoundary: Client pe us data ko “unpack” karta hai.
     <HydrationBoundary state={dehydrate(queryClient)}>
       <Suspense fallback={<AgentsviewLoading />}>
         <ErrorBoundary fallback={<AgentsviewError />}>
