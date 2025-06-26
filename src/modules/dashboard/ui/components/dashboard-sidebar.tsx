@@ -2,11 +2,9 @@
 import React from "react";
 
 import {
-  SidebarProvider,
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
   SidebarMenu,
