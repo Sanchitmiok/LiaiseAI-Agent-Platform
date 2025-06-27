@@ -7,12 +7,22 @@ import { getQueryClient, trpc } from "@/trpc/server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
 import React, { Suspense } from "react";
-import AgentListHeader from "@/components/agentList-header";
+import AgentListHeader from "@/modules/agents/ui/components/agentList-header";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import type { SearchParams } from "nuqs";
+import { loadSearchParams } from "@/modules/agents/params";
 
-async function page() {
+
+interface Props {
+  searchParams : Promise<SearchParams>
+}
+
+async function page({ searchParams }: Props) {
+  const filters  = await loadSearchParams(searchParams);
+
+  
    const session = await auth.api.getSession({
       headers : await headers(),
     });
@@ -23,7 +33,7 @@ async function page() {
       redirect('/sign-in');
     }
   const queryClient = getQueryClient();
-  void queryClient.prefetchQuery(trpc.agents.getMany.queryOptions());
+  void queryClient.prefetchQuery(trpc.agents.getMany.queryOptions({...filters}));
   return (
     //dehydrate: Server pe data ko “pack” karta hai.
     //HydrationBoundary: Client pe us data ko “unpack” karta hai.

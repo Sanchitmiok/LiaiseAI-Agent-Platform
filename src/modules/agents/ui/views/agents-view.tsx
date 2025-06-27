@@ -6,25 +6,36 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { DataTable } from "../table/data-table";
 import { columns } from "../table/columns";
 import EmptyState from "@/components/empty-state";
-
+import { useAgentsFilter } from "../../hooks/use-agents-filter";
+import { DataPagination } from "../components/pagination";
 
 export function AgentsView() {
+  const [filters, setFilters] = useAgentsFilter();
   const trpc = useTRPC();
-  const { data } = useSuspenseQuery(trpc.agents.getMany.queryOptions());
+  const { data } = useSuspenseQuery(
+    trpc.agents.getMany.queryOptions({ ...filters })
+  );
 
   return (
     <div className="flex-1 pb-4 md:px-8 flex flex-col gap-y-4">
-      {data.length > 0 && (<DataTable data={data} columns={columns} />)}
-      {data.length === 0 && (
+      {data.items.length > 0 && (
+        <>
+          <DataTable data={data.items} columns={columns} />
+          <DataPagination
+           page = {filters.page}
+           totalPages = {data.totalPages}
+           onPageChange = {(page : number) => setFilters({page})} />
+        </>
+      )}
+      {data.items.length === 0 && (
         <EmptyState
           title="Create your first Agent"
           description="Agents are AI assistants that can help you with various tasks. Create one to get started."
         />
       )}
     </div>
-  )
+  );
 }
-
 
 export const AgentsviewLoading = () => {
   return (
