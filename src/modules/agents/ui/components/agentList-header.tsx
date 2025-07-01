@@ -6,6 +6,7 @@ import { NewAgentDialog } from "@/modules/agents/ui/components/new-agent-dialog"
 import { useAgentsFilter } from "../../hooks/use-agents-filter";
 import { AgentsSearchFilter } from "./agents-search-filter";
 import { DEFAULT_PAGE } from "@/constants";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 function AgentListHeader() {
   const [filters, setFilters] = useAgentsFilter();
@@ -16,8 +17,8 @@ function AgentListHeader() {
     setFilters({
       search: "",
       page: DEFAULT_PAGE,
-    })
-  }
+    });
+  };
   return (
     <div className="pb-4">
       <NewAgentDialog open={isDialogOpen} openChange={setIsDialogOpen} />
@@ -30,14 +31,22 @@ function AgentListHeader() {
           </Button>
         </div>
       </div>
-      <div className="flex items-center gap-x-2 px-4 md:px-8 py-2">
-        <AgentsSearchFilter />
-        {isAnyfiltermodified && (
-          <Button variant="outline" size="sm" className="py-2" onClick={handleResetFilters}>
-            <XIcon className="" /> Reset Filters
-          </Button>
-        )}
-      </div>
+      <ScrollArea>
+        <div className="flex items-center gap-x-2 px-4 md:px-8 py-2">
+          <AgentsSearchFilter />
+          {isAnyfiltermodified && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="py-2"
+              onClick={handleResetFilters}
+            >
+              <XIcon className="" /> Reset Filters
+            </Button>
+          )}
+        <ScrollBar/>
+        </div>
+      </ScrollArea>
     </div>
   );
 }
