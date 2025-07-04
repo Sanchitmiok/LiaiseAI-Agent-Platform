@@ -32,7 +32,7 @@ function Dashboardsidebar() {
       <SidebarHeader className="text-sidebar-accent-foreground">
         <Link href="" className="flex items-center gap-2 px-2 pt-2">
           <Image alt="Icon" src="/logo.svg" height={36} width={36} />
-          <p className="text-2xl font-bold">SAAS.AI</p>
+          <p className="text-2xl font-bold">LiaiseAI</p>
         </Link>
       </SidebarHeader>
       <div className="px-4 py-2">
