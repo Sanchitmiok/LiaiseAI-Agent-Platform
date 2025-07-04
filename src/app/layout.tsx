@@ -12,7 +12,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "SaaS AI : Your AI partner",
+  title: "LiaiseAI : Your AI partner",
   description: "",
 };
 
