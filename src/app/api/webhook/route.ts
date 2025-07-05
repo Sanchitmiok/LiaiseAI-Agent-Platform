@@ -12,10 +12,26 @@ import {
 import { and, eq, not } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
+/**
+ * Verifies the authenticity of a webhook request using the provided body and signature.
+ *
+ * @param body - The raw request body as a string
+ * @param signature - The signature from the webhook request headers
+ * @returns True if the signature is valid; otherwise, false
+ */
 function verifySignatureWithSDK(body: string, signature: string): boolean {
   return streamVideo.verifyWebhook(body, signature);
 }
 
+/**
+ * Handles POST webhook events from the video streaming service, processing call session events to update meeting and agent records and manage real-time video call sessions.
+ *
+ * Validates request headers and signature, parses the event payload, and processes supported event types:
+ * - For `call.session_started`, activates the meeting, updates its status and start time, retrieves the associated agent, and initializes a real-time call session with OpenAI integration.
+ * - For `call.session_participant_left`, ends the corresponding video call session.
+ *
+ * Returns appropriate JSON responses for missing or invalid data, and a 200 status on successful event processing.
+ */
 export async function POST(req: NextRequest) {
   const signature = req.headers.get("x-signature");
   const apiKey = req.headers.get("x-api-key");
