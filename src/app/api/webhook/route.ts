@@ -86,25 +86,40 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Agent not found" }, { status: 404 });
     }
 
-    const call = streamVideo.video.call("default", meetingId);
-    const realtimeClient = await streamVideo.video.connectOpenAi({
-      call,
-      openAiApiKey: process.env.OPENAI_API_KEY!,
-      agentUserId: existingAgent.id,
-    });
+    if (!process.env.OPENAI_API_KEY) {
+      return NextResponse.json(
+        { error: "OpenAI API key not configured" },
+        { status: 500 }
+      );
+    }
 
-    realtimeClient.updateSession({
-      instruction: existingAgent.instructions,
-    });
-  }else if(eventType === "call.session_participant_left"){
+    const call = streamVideo.video.call("default", meetingId);
+    try {
+      const realtimeClient = await streamVideo.video.connectOpenAi({
+        call,
+        openAiApiKey: process.env.OPENAI_API_KEY!,
+        agentUserId: existingAgent.id,
+      });
+
+      realtimeClient.updateSession({
+        instruction: existingAgent.instructions,
+      });
+    } catch (error) {
+      console.error("Failed to connect OpenAI:", error);
+      return NextResponse.json(
+        { error: "Failed to establish OpenAI connection" },
+        { status: 500 }
+      );
+    }
+  } else if (eventType === "call.session_participant_left") {
     const event = payload as unknown as CallSessionParticipantLeftEvent;
     const meetingId = event.call_cid.split(":")[1];
 
-    if(!meetingId){
+    if (!meetingId) {
       return NextResponse.json({ error: "Missing meetingId" }, { status: 400 });
     }
 
-    const call = streamVideo.video.call("default" , meetingId);
+    const call = streamVideo.video.call("default", meetingId);
     await call.end();
   }
   return NextResponse.json({ status: 200 });
