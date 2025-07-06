@@ -9,7 +9,8 @@
     "lint": "next lint",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "dev:webhook": "ngrok http --url=awaited-wasp-glorious.ngrok-free.app 3000"
+    "dev:webhook": "ngrok http --url=awaited-wasp-glorious.ngrok-free.app 3000",
+    "inngest": "npx inngest-cli@latest dev"
   },
   "dependencies": {
     "@dicebear/collection": "^9.2.2",
@@ -75,6 +76,7 @@
     "react-dom": "^19.0.0",
     "react-error-boundary": "^6.0.0",
     "react-hook-form": "^7.58.1",
+    "react-markdown": "^10.1.0",
     "react-resizable-panels": "^3.0.3",
     "recharts": "^2.15.3",
     "server-only": "^0.0.1",
