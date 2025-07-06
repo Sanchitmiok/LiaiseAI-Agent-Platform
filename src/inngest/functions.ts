@@ -30,14 +30,15 @@ Example:
 - Mention of integration with Z`.trim(),
   model: openai({ model: "gpt-3.5-turbo", apiKey: process.env.OPENAI_API_KEY }),
 });
-export const meetingsProccessing = inngest.createFunction(
-  { id: "meetins/processing" },
+export const meetingsProcessing = inngest.createFunction(
+  { id: "meetings/processing" },
   { event: "meetings/processing" },
   async ({ event, step }) => {
     const response = await step.run("fetch-transcript", async () => {
       return fetch(event.data?.transcriptUrl).then((res) => res.text());
     });
-    const transcript = await step.run("parsee-transcript", () => {
+
+    const transcript = await step.run("parse-transcript", () => {
       return JSONL.parse<StreamTranscriptItems>(response);
     });
 
@@ -92,11 +93,14 @@ export const meetingsProccessing = inngest.createFunction(
     }); // transcriptWithSpeakers
 
     const { output } = await summerizer.run(
-      "Summerize the following transcript: " +
+      "Summarize the following transcript: " +
         JSONL.stringify(transcriptWithSpeakers)
     );
 
     await step.run("save-summary", async () => {
+      if (!event.data?.meetingId) {
+        throw new Error("Meeting ID is required");
+      }
       await db
         .update(meetings)
         .set({

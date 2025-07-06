@@ -17,7 +17,6 @@ import { NextRequest, NextResponse } from "next/server";
 function verifySignatureWithSDK(body: string, signature: string): boolean {
   return streamVideo.verifyWebhook(body, signature);
 }
-
 export async function POST(req: NextRequest) {
   const signature = req.headers.get("x-signature");
   const apiKey = req.headers.get("x-api-key");
@@ -137,7 +136,7 @@ export async function POST(req: NextRequest) {
         status: "processing",
         endTime: new Date(),
       })
-      .where(and(eq(meetingId, meetings.id), eq(meetings.status, "active")));
+      .where(and(eq(meetings.id,meetingId), eq(meetings.status, "active")));
   } else if (eventType === "call.transcription_ready") {
     const event = payload as unknown as CallTranscriptionReadyEvent;
     const meetingId = event.call_cid.split(":")[1];
