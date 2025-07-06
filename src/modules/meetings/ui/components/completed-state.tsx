@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 interface Props {
   data: MeetingGetOne;
 }
+
 function CompletedState({ data }: Props) {
   return (
     <div className="flex flex-col gap-y-4">
@@ -58,11 +59,15 @@ function CompletedState({ data }: Props) {
         <TabsContent value="recording">
           <div className="bg-white rounded-lg border px-2 py-3 flex items-center justify-center">
             {/* Note video will be deleted from stream after two weeks */}
-            <video
-              src={data.recordingUrl!}
-              className="rounded-md max-w-full max-h-[500px] w-full sm:max-w-[500px] md:max-w-[900px]"
-              controls
-            />
+            {data.recordingUrl ? (
+              <video
+                src={data.recordingUrl}
+                className="rounded-md max-w-full max-h-[500px] w-full sm:max-w-[500px] md:max-w-[900px]"
+                controls
+              />
+            ) : (
+              <p className="text-gray-500">Recording not available</p>
+            )}
           </div>
         </TabsContent>
         <TabsContent value="summary">
@@ -96,61 +101,101 @@ function CompletedState({ data }: Props) {
               </Badge>
               <div>
                 <Markdown
-                    components={{
-                        h1: (props) => (
-                            <h1 className="text-2xl font-semibold mb-4 text-gray-900" {...props} />
-                        ),
-                        h2: (props) => (
-                            <h2 className="text-xl font-semibold mb-3 text-gray-800" {...props} />
-                        ),
-                        h3: (props) => (
-                            <h3 className="text-lg font-medium mb-2 text-gray-700" {...props} />
-                        ),
-                        h4: (props) => (
-                            <h4 className="text-base font-medium mb-2 text-gray-600" {...props} />
-                        ),
-                        h5: (props) => (
-                            <h5 className="text-sm font-medium mb-1 text-gray-500" {...props} />
-                        ),
-                        h6: (props) => (
-                            <h6 className="text-xs font-medium mb-1 text-gray-400" {...props} />
-                        ),
-                        p: (props) => (
-                            <p className="mb-3 leading-relaxed text-gray-800" {...props} />
-                        ),
-                        ul: (props) => (
-                            <ul className="list-disc list-inside mb-3 pl-5" {...props} />
-                        ),
-                        ol: (props) => (
-                            <ol className="list-decimal list-inside mb-3 pl-5" {...props} />
-                        ),
-                        li: (props) => (
-                            <li className="mb-1" {...props} />
-                        ),
-                        blockquote: (props) => (
-                            <blockquote className="border-l-4 border-gray-200 pl-4 italic text-gray-700 mb-3" {...props} />
-                        ),
-                        code: (props) => (
-                            <code className="bg-gray-100 text-gray-800 rounded px-1.5 py-0.5 font-mono text-sm" {...props} />
-                        ),
-                        pre: (props) => (
-                            <pre className="bg-gray-100 text-gray-800 rounded-lg p-3 overflow-x-auto mb-4" {...props} />
-                        ),
-                        a: (props) => (
-                            <a className="text-blue-600 underline hover:text-blue-800" target="_blank" rel="noopener noreferrer" {...props} />
-                        ),
-                        strong: (props) => (
-                            <strong className="font-semibold text-gray-900" {...props} />
-                        ),
-                        em: (props) => (
-                            <em className="italic text-gray-700" {...props} />
-                        ),
-                        hr: () => (
-                            <hr className="my-6 border-t border-gray-200" />
-                        ),
-                    }}
+                  components={{
+                    h1: (props) => (
+                      <h1
+                        className="text-2xl font-semibold mb-4 text-gray-900"
+                        {...props}
+                      />
+                    ),
+                    h2: (props) => (
+                      <h2
+                        className="text-xl font-semibold mb-3 text-gray-800"
+                        {...props}
+                      />
+                    ),
+                    h3: (props) => (
+                      <h3
+                        className="text-lg font-medium mb-2 text-gray-700"
+                        {...props}
+                      />
+                    ),
+                    h4: (props) => (
+                      <h4
+                        className="text-base font-medium mb-2 text-gray-600"
+                        {...props}
+                      />
+                    ),
+                    h5: (props) => (
+                      <h5
+                        className="text-sm font-medium mb-1 text-gray-500"
+                        {...props}
+                      />
+                    ),
+                    h6: (props) => (
+                      <h6
+                        className="text-xs font-medium mb-1 text-gray-400"
+                        {...props}
+                      />
+                    ),
+                    p: (props) => (
+                      <p
+                        className="mb-3 leading-relaxed text-gray-800"
+                        {...props}
+                      />
+                    ),
+                    ul: (props) => (
+                      <ul
+                        className="list-disc list-inside mb-3 pl-5"
+                        {...props}
+                      />
+                    ),
+                    ol: (props) => (
+                      <ol
+                        className="list-decimal list-inside mb-3 pl-5"
+                        {...props}
+                      />
+                    ),
+                    li: (props) => <li className="mb-1" {...props} />,
+                    blockquote: (props) => (
+                      <blockquote
+                        className="border-l-4 border-gray-200 pl-4 italic text-gray-700 mb-3"
+                        {...props}
+                      />
+                    ),
+                    code: (props) => (
+                      <code
+                        className="bg-gray-100 text-gray-800 rounded px-1.5 py-0.5 font-mono text-sm"
+                        {...props}
+                      />
+                    ),
+                    pre: (props) => (
+                      <pre
+                        className="bg-gray-100 text-gray-800 rounded-lg p-3 overflow-x-auto mb-4"
+                        {...props}
+                      />
+                    ),
+                    a: (props) => (
+                      <a
+                        className="text-blue-600 underline hover:text-blue-800"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        {...props}
+                      />
+                    ),
+                    strong: (props) => (
+                      <strong
+                        className="font-semibold text-gray-900"
+                        {...props}
+                      />
+                    ),
+                    em: (props) => (
+                      <em className="italic text-gray-700" {...props} />
+                    ),
+                    hr: () => <hr className="my-6 border-t border-gray-200" />,
+                  }}
                 >
-                    {data.summary}
+                  {data.summary}
                 </Markdown>
               </div>
             </div>
