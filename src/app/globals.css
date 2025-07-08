@@ -3,6 +3,22 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -88,6 +104,21 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+/* Chat-stream custom css end*/
+.str-chat {
+  --str-chat__primary-color: #009688;
+  --str-chat__active-primary-color: #004d40;
+  --str-chat__surface-color: #f5f5f5;
+  --str-chat__secondary-surface-color: #fafafa;
+  --str-chat__primary-surface-color: #e0f2f1;
+  --str-chat__primary-surface-color-low-emphasis: #edf7f7;
+  --str-chat__border-radius-circle: 6px;
+}
+
+/* Chat-stream custom css start */
+
+
+
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -120,21 +151,4 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
-
-@layer base{
- button:not(:disabled),
- [role="button"]:not(:disabled){
-  cursor: pointer;
- }
 }
