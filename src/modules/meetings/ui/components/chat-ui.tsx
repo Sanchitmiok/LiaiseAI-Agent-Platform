@@ -30,10 +30,10 @@ function ChatUI({
 }: Props) {
   const trpc = useTRPC();
   const { mutateAsync: generateChatToken } = useMutation(
-    trpc.meetings.generateToken.mutationOptions()
+    trpc.meetings.generateChatToken.mutationOptions()
   );
 
-  const [channel, setchannel] = useState<StreamChannel>();
+  const [channel, setChannel] = useState<StreamChannel>();
 
   const client = useCreateChatClient({
     apiKey: process.env.NEXT_PUBLIC_STREAM_CHAT_API_KEY!,
@@ -51,7 +51,7 @@ function ChatUI({
     const channel = client.channel("messaging", meetingId, {
       members: [userId],
     });
-    setchannel(channel);
+    setChannel(channel);
   }, [client, meetingId, meetingName, userId]);
 
   if (!client) {
