@@ -16,7 +16,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import DashBoardUserButtion from "./dashboard-user-button";
 import { DashboardTrial } from "./dashboard-trial";
 
@@ -28,9 +28,13 @@ const secondSection = [{ icon: StarIcon, label: "Upgrade", href: "/upgrade" }];
 
 function Dashboardsidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   return (
     <Sidebar>
-      <SidebarHeader className="text-sidebar-accent-foreground">
+      <SidebarHeader
+        className="text-sidebar-accent-foreground"
+        onClick={() => router.push("/")}
+      >
         <Link href="" className="flex items-center gap-2 px-2 pt-2">
           <Image alt="Icon" src="/logo.svg" height={36} width={36} />
           <p className="text-2xl font-bold">LiaiseAI</p>

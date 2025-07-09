@@ -14,7 +14,6 @@ import { useConfirm } from "@/hooks/use-confirm";
 import { UpdateMeetingDialog } from "../components/update-meeting-dialog";
 import { UpcomingState } from "../components/upcoming-state";
 import { ActiveState } from "../components/active-state";
-import { CancelledState } from "../components/cancelled-state";
 import { ProcessingState } from "../components/processing-state";
 import CompletedState from "../components/completed-state";
 
@@ -64,7 +63,6 @@ function MeetingIdView({ meetingId }: Props) {
   const isUpcoming = data.status === "upcoming";
   const isCompleted = data.status === "completed";
   const isProcessing = data.status === "processing";
-  const isCancelled = data.status === "cancelled";
 
   return (
     <>
@@ -83,7 +81,6 @@ function MeetingIdView({ meetingId }: Props) {
         />
 
         {isActive && <ActiveState meetingId={meetingId} />}
-        {isCancelled && <CancelledState />}
         {isProcessing && <ProcessingState />}
         {isUpcoming && (
           <UpcomingState
