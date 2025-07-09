@@ -1,6 +1,10 @@
 import { db } from "@/db";
 import { agents, meetings, user } from "@/db/schema";
-import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
+import {
+  createTRPCRouter,
+  premiumProcedure,
+  protectedProcedure,
+} from "@/trpc/init";
 import { z } from "zod";
 import {
   and,
@@ -28,7 +32,7 @@ import { streamChat } from "@/lib/stream-chat";
 
 export const meetingsRouter = createTRPCRouter({
   // Create a new meeting
-  create: protectedProcedure
+  create: premiumProcedure("meetings")
     .input(meetingsInsertSchema)
     .mutation(async ({ input, ctx }) => {
       const [createdMeeting] = await db
@@ -342,16 +346,16 @@ export const meetingsRouter = createTRPCRouter({
       return transcriptWithSpeakers;
     }),
 
-   generateChatToken:protectedProcedure.mutation(async ({ctx})=>{
+  generateChatToken: protectedProcedure.mutation(async ({ ctx }) => {
     const token = streamChat.createToken(ctx.auth.user.id);
 
     await streamChat.upsertUser({
-      id : ctx.auth.user.id,
-      role : "admin",
-    })
+      id: ctx.auth.user.id,
+      role: "admin",
+    });
 
     return token;
-   })
+  }),
 });
 
 // ctx => context

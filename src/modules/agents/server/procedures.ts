@@ -1,6 +1,10 @@
 import { db } from "@/db";
-import { agents } from "@/db/schema";
-import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
+import { agents, meetings } from "@/db/schema";
+import {
+  createTRPCRouter,
+  premiumProcedure,
+  protectedProcedure,
+} from "@/trpc/init";
 import { agentsInsertSchema, agentsUpdateschema } from "../schemas";
 import { z } from "zod";
 import { and, count, desc, eq, getTableColumns, ilike, sql } from "drizzle-orm";
@@ -22,7 +26,8 @@ export const agentsRouter = createTRPCRouter({
         .set(input)
         .where(
           and(eq(agents.id, input.id), eq(agents.userId, ctx.auth.user.id))
-        ).returning();
+        )
+        .returning();
 
       if (!updatedAgent) {
         throw new TRPCError({
@@ -67,7 +72,8 @@ export const agentsRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const { page, pageSize, search } = input;
-      const data = await db
+
+     const data = await db
         .select({
           //TODO: Change to actual count
           meetingCount: sql<number>`500`,
@@ -107,10 +113,25 @@ export const agentsRouter = createTRPCRouter({
   getOne: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input, ctx }) => {
+
+      //testing
+      const [meetingCount]  = await db
+        .select({
+          count: count(meetings.id),
+        })
+        .from(meetings)
+        .where(
+          and(
+            eq(meetings.agentId, input.id)
+          )
+        );
+        const Count = meetingCount?.count ?? 0
+      
+
       const [existingAgent] = await db
         .select({
           //TODO: Change to actual count
-          meetingCount: sql<number>`5`,
+          meetingCount: sql<number>`${Count}`,
           ...getTableColumns(agents),
         })
         .from(agents)
@@ -129,7 +150,7 @@ export const agentsRouter = createTRPCRouter({
 
   // Create Agent
   // This is used to create a new agent
-  create: protectedProcedure
+  create: premiumProcedure("agents")
     .input(agentsInsertSchema)
     .mutation(async ({ input, ctx }) => {
       const [createdAgent] = await db

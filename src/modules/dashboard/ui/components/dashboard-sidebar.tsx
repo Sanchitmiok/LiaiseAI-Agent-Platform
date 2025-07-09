@@ -18,6 +18,7 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import DashBoardUserButtion from "./dashboard-user-button";
+import { DashboardTrial } from "./dashboard-trial";
 
 const firstSection = [
   { icon: VideoIcon, label: "Meetings", href: "/meetings" },
@@ -94,6 +95,7 @@ function Dashboardsidebar() {
         </SidebarGroupContent>
       </SidebarContent>
       <SidebarFooter>
+        <DashboardTrial />
         <DashBoardUserButtion />
       </SidebarFooter>
     </Sidebar>
