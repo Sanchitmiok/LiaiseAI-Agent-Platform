@@ -60,12 +60,12 @@ export const UpgradeView = () => {
             const isCurrentProduct = currentSubscription?.id === product.id;
             const isPremium = !!currentSubscription;
             let buttonText = "Upgrade";
-            console.log("Current Subscription:", currentSubscription);
-            console.log("Product:", product);
+            // console.log("Current Subscription:", currentSubscription);
             let onSubscribe = () =>
               authClient.checkout({ products: [product.id] });
-
+            
             if (isCurrentProduct) {
+              console.log("Product:", product);
               buttonText = "Manage Subscription";
               onSubscribe = () => authClient.customer.portal();
             } else if (isPremium) {
