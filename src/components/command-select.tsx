@@ -26,9 +26,7 @@ interface CommandSelectProps {
 export const CommandSelect = ({
   options,
   onSelect,
-  onSearch,
   value,
-  isSearchable,
   placeholder,
   className,
 }: CommandSelectProps) => {
