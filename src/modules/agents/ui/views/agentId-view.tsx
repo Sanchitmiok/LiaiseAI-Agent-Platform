@@ -28,7 +28,7 @@ export const AgentIdView = ({ agentId }: Props) => {
   );
   const router = useRouter();
   const queryClient = useQueryClient();
-  const [updateAgentDialogOpen, setupdateAgentDialogOpen] = useState(false)
+  const [updateAgentDialogOpen, setupdateAgentDialogOpen] = useState(false);
   const [RemoveConfirmation, confirmRemove] = useConfirm(
     "Are you sure you want to remove this agent?",
     "This action cannot be undone. All data related to this agent will be permanently deleted."
@@ -45,8 +45,13 @@ export const AgentIdView = ({ agentId }: Props) => {
 
   const removeAgent = useMutation(
     trpc.agents.remove.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries(trpc.agents.getMany.queryOptions({}));
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(
+          trpc.agents.getMany.queryOptions({})
+        );
+        await queryClient.invalidateQueries(
+          trpc.premium.getFreeUsage.queryOptions()
+        );
         router.push("/agents");
       },
       onError: (error) => {
@@ -58,8 +63,12 @@ export const AgentIdView = ({ agentId }: Props) => {
 
   return (
     <>
-      <RemoveConfirmation/>
-      <UpdateAgentDialog open={updateAgentDialogOpen} openChange={setupdateAgentDialogOpen} initialValues={data}/>
+      <RemoveConfirmation />
+      <UpdateAgentDialog
+        open={updateAgentDialogOpen}
+        openChange={setupdateAgentDialogOpen}
+        initialValues={data}
+      />
       <div className="flex-1/2 py-4 px-4 md:px-8 flex flex-col gap-y-4">
         <AgentIdViewHeader
           agentId={agentId}

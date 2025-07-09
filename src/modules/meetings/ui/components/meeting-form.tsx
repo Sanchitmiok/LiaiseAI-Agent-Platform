@@ -22,6 +22,7 @@ import { useState } from "react";
 import { CommandSelect } from "@/components/command-select";
 import { GeneartedAvatar } from "@/components/generated-avatar";
 import { NewAgentDialog } from "@/modules/agents/ui/components/new-agent-dialog";
+import { useRouter } from "next/navigation";
 
 interface MeetingFormProps {
   onSuccess?: (id?: string) => void;
@@ -36,6 +37,7 @@ export function MeetingForm({
 }: MeetingFormProps) {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const [agentSearch, setagentSearch] = useState("");
   const [openNewAgentDialog, setopenNewAgentDialog] = useState(false);
@@ -54,6 +56,10 @@ export function MeetingForm({
           trpc.meetings.getMany.queryOptions({})
         );
 
+        await queryClient.invalidateQueries(
+          trpc.premium.getFreeUsage.queryOptions()
+        );
+
         if (initialValues?.id) {
           await queryClient.invalidateQueries(
             trpc.meetings.getOne.queryOptions({ id: initialValues.id })
@@ -68,6 +74,10 @@ export function MeetingForm({
           `Error creating Meeting: ${error.message || "Unknown error"}`
           //TODO: Check if error is "FORBIDDEN" and , redirect to "/upgrade"
         );
+        
+        if (error.data?.code === "FORBIDDEN") {
+          router.push("/upgrade");
+        }
       },
     })
   );
@@ -122,7 +132,10 @@ export function MeetingForm({
 
   return (
     <>
-     <NewAgentDialog open = {openNewAgentDialog} openChange={setopenNewAgentDialog}/>
+      <NewAgentDialog
+        open={openNewAgentDialog}
+        openChange={setopenNewAgentDialog}
+      />
       <Form {...form}>
         <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
           <FormField

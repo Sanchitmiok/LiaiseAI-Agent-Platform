@@ -19,6 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface AgentFormProps {
   onSuccess?: () => void;
@@ -31,58 +32,57 @@ export function AgentForm({
   onCancel,
   initialValues,
 }: AgentFormProps) {
-
-  
   const trpc = useTRPC();
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const createAgent = useMutation(
     trpc.agents.create.mutationOptions({
       onSuccess: async () => {
         await queryClient.invalidateQueries(
-            trpc.agents.getMany.queryOptions({}),
+          trpc.agents.getMany.queryOptions({})
         );
-        
-        if(initialValues?.id) {
-          await queryClient.invalidateQueries(
-            trpc.agents.getOne.queryOptions({ id: initialValues.id }),
-          );
-        }
+
+        await queryClient.invalidateQueries(
+          trpc.premium.getFreeUsage.queryOptions(),
+        );
 
         onSuccess?.();
-       
       },
       onError: (error) => {
         console.error("Error creating agent:", error);
         toast.error(
-            `Error creating agent: ${error.message || "Unknown error"}`
-            //TODO: Check if error is "FORBIDDEN" and , redirect to "/upgrade"
+          `Error creating agent: ${error.message || "Unknown error"}`
+          //TODO: Check if error is "FORBIDDEN" and , redirect to "/upgrade"
         );
+
+        if(error.data?.code === "FORBIDDEN"){
+          router.push("/upgrade")
+        }
       },
     })
   );
 
-   const updateAgent = useMutation(
+  const updateAgent = useMutation(
     trpc.agents.update.mutationOptions({
       onSuccess: async () => {
         await queryClient.invalidateQueries(
-            trpc.agents.getMany.queryOptions({}),
+          trpc.agents.getMany.queryOptions({})
         );
-        
-        if(initialValues?.id) {
+
+        if (initialValues?.id) {
           await queryClient.invalidateQueries(
-            trpc.agents.getOne.queryOptions({ id: initialValues.id }),
+            trpc.agents.getOne.queryOptions({ id: initialValues.id })
           );
         }
 
         onSuccess?.();
-       
       },
       onError: (error) => {
         console.error("Error creating agent:", error);
         toast.error(
-            `Error creating agent: ${error.message || "Unknown error"}`
-            //TODO: Check if error is "FORBIDDEN" and , redirect to "/upgrade"
+          `Error creating agent: ${error.message || "Unknown error"}`
+          //TODO: Check if error is "FORBIDDEN" and , redirect to "/upgrade"
         );
       },
     })
@@ -105,7 +105,7 @@ export function AgentForm({
       updateAgent.mutate({
         ...values,
         id: initialValues.id,
-      })
+      });
     } else {
       createAgent.mutate(values);
     }
@@ -147,12 +147,14 @@ export function AgentForm({
         />
 
         <div className="flex justify-end space-x-2">
-           {
-            onCancel &&  <Button type="button" disabled={isPending} onClick={onCancel}>Cancel</Button>
-           }
-           <Button type="submit" disabled={isPending}>
-             {isEdit ? "Update" : "Create"} Agent
-           </Button>
+          {onCancel && (
+            <Button type="button" disabled={isPending} onClick={onCancel}>
+              Cancel
+            </Button>
+          )}
+          <Button type="submit" disabled={isPending}>
+            {isEdit ? "Update" : "Create"} Agent
+          </Button>
         </div>
       </form>
     </Form>
