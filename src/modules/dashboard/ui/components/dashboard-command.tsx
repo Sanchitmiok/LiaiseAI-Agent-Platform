@@ -1,4 +1,3 @@
-import { GeneartedAvatar } from "@/components/generated-avatar";
 import {
   CommandResponsiveDialog,
   CommandInput,
@@ -43,47 +42,41 @@ const DashboardCommand = ({ open, setOpen }: Props) => {
         onValueChange={(value) => setSearch(value)}
       />
       <CommandList>
-        <CommandGroup>
-          <CommandEmpty>
-            <span className="text-muted-foreground px-2 py-1">
-              No meetings found for <strong>{search}</strong>
-            </span>
-          </CommandEmpty>
-          {meetings.data?.items.map((meeting) => (
-            <CommandItem
-              key={meeting.id}
-              onSelect={() => {
-                router.push(`/meetings/${meeting.id}`);
-                setOpen(false);
-              }}
-            >
-              {meeting.name}
-            </CommandItem>
-          ))}
-        </CommandGroup>
-        <CommandGroup>
-          <CommandEmpty>
-            <span className="text-muted-foreground px-2 py-1">
-              No agents found for <strong>{search}</strong>
-            </span>
-          </CommandEmpty>
-          {agents.data?.items.map((agent) => (
-            <CommandItem
-              key={agent.id}
-              onSelect={() => {
-                router.push(`/agents/${agent.id}`);
-                setOpen(false);
-              }}
-            >
-              <GeneartedAvatar
-                seed={agent.name}
-                variant="botttsNeutral"
-                className="size-5"
-              />
-              {agent.name}
-            </CommandItem>
-          ))}
-        </CommandGroup>
+        <CommandEmpty>
+          <span className="text-muted-foreground px-2 py-1">
+            No meetings or agents found for <strong>{search}</strong>
+          </span>
+        </CommandEmpty>
+        {meetings.data?.items && meetings.data.items.length > 0 && (
+          <CommandGroup heading="Meetings">
+            {meetings.data.items.map((meeting) => (
+              <CommandItem
+                key={meeting.id}
+                onSelect={() => {
+                  router.push(`/meetings/${meeting.id}`);
+                  setOpen(false);
+                }}
+              >
+                {meeting.name}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        )}
+        {agents.data?.items && agents.data.items.length > 0 && (
+          <CommandGroup heading="Agents">
+            {agents.data.items.map((agent) => (
+              <CommandItem
+                key={agent.id}
+                onSelect={() => {
+                  router.push(`/agents/${agent.id}`);
+                  setOpen(false);
+                }}
+              >
+                {agent.name}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        )}
       </CommandList>
     </CommandResponsiveDialog>
   );
