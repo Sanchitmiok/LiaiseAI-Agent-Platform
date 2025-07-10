@@ -65,7 +65,6 @@ function SignUpView() {
         onSuccess: () => {
           setloading(false);
           seterror(null);
-          
         },
         onError: (ctx) => {
           setloading(false);
@@ -255,8 +254,16 @@ function SignUpView() {
           </Form>
 
           <div className="bg-radial from-sidebar-accent to-sidebar relative hidden md:flex flex-col gap-y-4 items-center justify-center">
-            <img src="/logo.svg" alt="Image" className="h-[92px] w-[92px]" />
-            <p className="text-3xl font-bold select-none text-sidebar-foreground">LiaiseAI</p>
+            <Image
+              width={92}
+              height={92}
+              src="/logo.svg"
+              alt="Image"
+              className="h-[92px] w-[92px]"
+            />
+            <p className="text-3xl font-bold select-none text-sidebar-foreground">
+              LiaiseAI
+            </p>
           </div>
         </CardContent>
       </Card>
