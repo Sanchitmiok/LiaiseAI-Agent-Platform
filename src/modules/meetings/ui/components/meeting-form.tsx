@@ -202,7 +202,7 @@ export function MeetingForm({
               </Button>
             )}
             <Button type="submit" disabled={isPending}>
-              {isEdit ? "Update" : "Create"} Agent
+              {isEdit ? "Update" : "Create"} Meeting
             </Button>
           </div>
         </form>
