@@ -63,7 +63,7 @@ export const UpgradeView = () => {
             // console.log("Current Subscription:", currentSubscription);
             let onSubscribe = () =>
               authClient.checkout({ products: [product.id] });
-            
+
             if (isCurrentProduct) {
               console.log("Product:", product);
               buttonText = "Manage Subscription";
@@ -120,9 +120,6 @@ export const UpgradeView = () => {
               Our team is here to help you find the perfect plan for your needs
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">
-                Compare Plans
-              </button>
               <button className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium">
                 Contact Support
               </button>
