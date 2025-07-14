@@ -55,8 +55,9 @@ export const UpgradeView = () => {
         </div>
 
         {/* Pricing Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
-          {products.map((product, index) => {
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8">
+          {products.map((product) => {
+            // console.log(index)
             const isCurrentProduct = currentSubscription?.id === product.id;
             const isPremium = !!currentSubscription;
             let buttonText = "Upgrade";
@@ -74,57 +75,33 @@ export const UpgradeView = () => {
             }
 
             return (
-              <div
-                key={product.id}
-                className={`transform transition-all duration-200 hover:scale-105 ${
-                  index === 1 && products.length === 3
-                    ? "md:col-span-2 xl:col-span-1"
-                    : ""
-                }`}
-              >
+                <div key={product.id} className="w-full h-full flex lg:hover:scale-105 lg:hover:shadow-xl lg:transition-all lg:duration-300">
                 <PricingCard
                   title={product.name}
                   description={product.description}
                   variant={
-                    product.metadata?.variant === "highlighted"
-                      ? "highlighted"
-                      : "default"
+                  product.metadata?.variant === "highlighted"
+                    ? "highlighted"
+                    : "default"
                   }
                   price={
-                    product.prices?.[0]?.amountType == "fixed"
-                      ? product.prices[0].priceAmount / 100
-                      : 0
+                  product.prices?.[0]?.amountType == "fixed"
+                    ? product.prices[0].priceAmount / 100
+                    : 0
                   }
                   priceSuffix={`/${
-                    product.prices?.[0]?.recurringInterval || ""
+                  product.prices?.[0]?.recurringInterval || ""
                   }`}
                   features={product.benefits.map(
-                    (benefit) => benefit.description
+                  (benefit) => benefit.description
                   )}
                   badge={product?.metadata?.badge as string | null}
                   buttonText={buttonText}
                   onSubscribe={onSubscribe}
                 />
-              </div>
+                </div>
             );
           })}
-        </div>
-
-        {/* Bottom Section */}
-        <div className="mt-16 text-center">
-          <div className="bg-gray-50 rounded-2xl p-6 sm:p-8 max-w-4xl mx-auto">
-            <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">
-              Need help choosing a plan?
-            </h3>
-            <p className="text-gray-600 mb-6 text-sm sm:text-base">
-              Our team is here to help you find the perfect plan for your needs
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium">
-                Contact Support
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </div>
