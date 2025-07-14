@@ -13,7 +13,8 @@ export const DashboardTrial = () => {
   const trpc = useTRPC();
   const { data } = useQuery(trpc.premium.getFreeUsage.queryOptions());
 
-  if (!data) {
+  // Don't show trial component if no data or if user is premium
+  if (!data || data.isPremium) {
     return null;
   }
 

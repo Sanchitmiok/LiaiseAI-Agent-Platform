@@ -15,10 +15,11 @@ export const UpgradeView = () => {
   const { data: currentSubscription } = useSuspenseQuery(
     trpc.premium.getCurrentSubscription.queryOptions()
   );
+  const Plan = currentSubscription?.name || "Free";
 
   return (
-    <div className="min-h-screen py-6 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
+    <div className="h-fit pt-5 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto pb-10 ">
         {/* Header Section */}
         <div className="text-center mb-12 lg:mb-16">
           <div className="inline-flex items-center justify-center p-2 bg-primary/10 rounded-full mb-4">
@@ -47,10 +48,20 @@ export const UpgradeView = () => {
               </span>{" "}
               plan
             </p>
-            <p className="text-sm sm:text-base text-gray-500 max-w-xl mx-auto">
-              Upgrade to unlock premium features and take your experience to the
-              next level
-            </p>
+            {
+              Plan === "Free" && (
+                <p className="text-sm sm:text-base text-gray-500 max-w-xl mx-auto">
+                  Upgrade to unlock premium features and take your experience to
+                  the next level
+                </p>
+              )
+            }{
+              Plan !== "Free" && (
+                <p className="text-sm sm:text-base text-gray-500 max-w-xl mx-auto">
+                  Manage your subscription or upgrade to a different plan
+                </p>
+              )
+            }
           </div>
         </div>
 

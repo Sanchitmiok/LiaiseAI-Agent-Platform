@@ -53,9 +53,17 @@ export const protectedProcedure = baseProcedure.use(async ({ ctx, next }) => {
 
 export const premiumProcedure = (entity: "meetings" | "agents") =>
   protectedProcedure.use(async ({ ctx, next }) => {
-    const customer = await polarClient.customers.getStateExternal({
-      externalId: ctx.auth.user.id,
-    });
+    let isPremium = false;
+    let customer = null;
+
+    try {
+      customer = await polarClient.customers.getStateExternal({
+        externalId: ctx.auth.user.id,
+      });
+      isPremium = customer?.activeSubscriptions?.length > 0;
+    } catch (error) {
+      console.log("Failed to get customer from Polar, treating as free user", error);
+    }
 
     const [userMeetings] = await db
       .select({
@@ -71,7 +79,6 @@ export const premiumProcedure = (entity: "meetings" | "agents") =>
       .from(agents)
       .where(eq(agents.userId, ctx.auth.user.id));
 
-    const isPremium = customer.activeSubscriptions.length > 0;
     const isFreeAgentLimitReached = userAgents.count >= MAX_FREE_AGENTS;
     const isFreeMeetingsLimitReached = userMeetings.count >= MAX_FREE_MEETINGS;
 
