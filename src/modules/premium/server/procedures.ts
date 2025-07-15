@@ -7,13 +7,15 @@ import { TRPCError } from "@trpc/server";
 
 export const premiumRouter = createTRPCRouter({
   getFreeUsage: protectedProcedure.query(async ({ ctx }) => {
+    let isPremiumUser = false;
+    
     try {
       const customer = await polarClient.customers.getStateExternal({
         externalId: ctx.auth.user.id,
       });
 
       const subscription = customer?.activeSubscriptions?.[0];
-      if (subscription) return null;
+      isPremiumUser = !!subscription;
     } catch (error) {
       console.log("Customer not found in Polar, treating as free user", error);
     }
@@ -35,6 +37,7 @@ export const premiumRouter = createTRPCRouter({
     return {
       meetingCount: userMeetings.count,
       agentCount: userAgents.count,
+      isPremium: isPremiumUser,
     };
   }),
   getProducts: protectedProcedure.query(async () => {
