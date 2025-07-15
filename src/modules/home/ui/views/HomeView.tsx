@@ -9,6 +9,7 @@ import {
   Zap,
   BookOpen,
   Rocket,
+  Bot,
 } from "lucide-react";
 import { useTRPC } from "@/trpc/client";
 import { useQuery} from "@tanstack/react-query";
@@ -79,7 +80,7 @@ export default function HomeView() {
             </p>
           </div>
 
-          <div className="bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-2xl text-white shadow-lg">
+          <div className="bg-sidebar from-45% via-60% to-100%  p-6 rounded-2xl text-white shadow-lg">
             <Link href="/upgrade">
               <div className="flex items-start justify-between">
                 <div>
@@ -110,7 +111,7 @@ export default function HomeView() {
                     <p className="text-3xl font-bold text-primary">
                       {agentCount}
                     </p>
-                    <Users className="h-10 w-10 text-slate-400 group-hover:text-primary transition-colors" />
+                    <Bot className="h-10 w-10 text-slate-400 group-hover:text-primary transition-colors" />
                   </div>
                   <p className="text-sm font-medium text-slate-500 mt-2">
                     Your Agents
@@ -187,30 +188,48 @@ export default function HomeView() {
 
               {activeTab === "meetings" && (
                 <ol className="list-decimal list-inside text-slate-600 space-y-2 animate-fade-in">
-                  <li>
+                    <li>
                     <span className="font-medium text-slate-800">
                       Navigate to Meetings:
                     </span>{" "}
                     Go to the Meetings section.
-                  </li>
-                  <li>
+                    </li>
+                    <li>
+                    <span className="font-medium text-slate-800">
+                      Manage Existing:
+                    </span>{" "}
+                    You can edit or delete existing meetings.
+                    </li>
+                    <li>
                     <span className="font-medium text-slate-800">
                       Create New Meeting:
                     </span>{" "}
-                    Click the &quot;New Meeting&quot; button.
-                  </li>
-                  <li>
+                    For new meeting click on &quot;New Meetings&quot;.
+                    </li>
+                    <li>
                     <span className="font-medium text-slate-800">
                       Select Agent:
                     </span>{" "}
-                    Choose which agent(s) to include.
-                  </li>
-                  <li>
+                    Choose an agent (if not found, click &quot;Create New Agent&quot; and create it).
+                    </li>
+                    <li>
                     <span className="font-medium text-slate-800">
-                      Schedule & Share:
+                      Start Meeting:
                     </span>{" "}
-                    Set the time and share invite links.
-                  </li>
+                    Click &quot;Start Meeting&quot;.
+                    </li>
+                    <li>
+                    <span className="font-medium text-slate-800">
+                      Setup Audio/Video:
+                    </span>{" "}
+                    Enable your microphone and camera (optional).
+                    </li>
+                    <li>
+                    <span className="font-medium text-slate-800">
+                      Get Results:
+                    </span>{" "}
+                    After ending the meeting, you&apos;ll receive summary, transcript, and recording.
+                    </li>
                 </ol>
               )}
             </div>
