@@ -16,6 +16,7 @@ export const useConfirm = (title: string,
 
     const handleClose = () => {
         if (promise) {
+            
             promise.resolve(false);
             setpromise(null);
         }

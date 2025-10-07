@@ -32,6 +32,10 @@ export const createCallerFactory = t.createCallerFactory;
 export const baseProcedure = t.procedure;
 
 export const protectedProcedure = baseProcedure.use(async ({ ctx, next }) => {
+
+
+  // Ye ek middleware hai jo protected routes ke liye use hota hai
+  // It checks if the user is authenticated and has a valid session
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -48,8 +52,12 @@ export const protectedProcedure = baseProcedure.use(async ({ ctx, next }) => {
       message: "User not found in session",
     });
   }
-  return next({ ctx: { ...ctx, auth: session } });
+  return next({ ctx: { 
+    ...ctx, // purana context agar kuch hai toh use karo , 
+    auth: session // Nayi information (user session) add kar di , iske through hum user ki information access kar sakte, taaki user ko baar bar apni information na deni pade
+  } });
 });
+
 
 export const premiumProcedure = (entity: "meetings" | "agents") =>
   protectedProcedure.use(async ({ ctx, next }) => {

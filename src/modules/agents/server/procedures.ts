@@ -6,6 +6,8 @@ import {
   protectedProcedure,
 } from "@/trpc/init";
 import { agentsInsertSchema, agentsUpdateschema } from "../schemas";
+
+// zod is used for input validation
 import { z } from "zod";
 import { and, count, desc, eq, getTableColumns, ilike } from "drizzle-orm";
 import {
@@ -17,6 +19,9 @@ import {
 import { TRPCError } from "@trpc/server";
 
 export const agentsRouter = createTRPCRouter({
+
+  // Update , getMany , getOne, create, remove ye sab endpoints hain
+  // These are used to manage agents in the application
   // Update Agent
   update: protectedProcedure
     .input(agentsUpdateschema)

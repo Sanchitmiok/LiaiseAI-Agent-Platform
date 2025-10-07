@@ -29,9 +29,13 @@ async function page({ searchParams }: Props) {
     redirect("/sign-in");
   }
   const queryClient = getQueryClient();
+
+  // prefetchQuery: Ye function server side pe data ko fetch karta hai
+  // taaki client side pe data already available ho aur loading time kam ho.
   void queryClient.prefetchQuery(
     trpc.agents.getMany.queryOptions({ ...filters })
   );
+  
   return (
     //dehydrate: Server pe data ko “pack” karta hai.
     //HydrationBoundary: Client pe us data ko “unpack” karta hai.

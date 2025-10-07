@@ -6,7 +6,12 @@ import { createTRPCClient, httpBatchLink } from '@trpc/client';
 import { createTRPCContext } from '@trpc/tanstack-react-query';
 import { useState } from 'react';
 import { makeQueryClient } from './query-client';
+
+// Yeh line sirf type definitions ke liye hai, actual implementation ke liye nahi
 import type { AppRouter } from './routers/_app';
+
+// useTRPC ek hook hai jo TRPC client ko access karne ke liye use hota hai
+// TRPCProvider ek component hai jo TRPC client ko context mein provide karta hai
 export const { TRPCProvider, useTRPC } = createTRPCContext<AppRouter>();
 let browserQueryClient: QueryClient;
 function getQueryClient() {
@@ -14,10 +19,6 @@ function getQueryClient() {
     // Server: always make a new query client
     return makeQueryClient();
   }
-  // Browser: make a new query client if we don't already have one
-  // This is very important, so we don't re-make a new client if React
-  // suspends during the initial render. This may not be needed if we
-  // have a suspense boundary BELOW the creation of the query client
   if (!browserQueryClient) browserQueryClient = makeQueryClient();
   return browserQueryClient;
 }
@@ -49,6 +50,7 @@ export function TRPCReactProvider(
     }),
   );
   return (
+    
     <QueryClientProvider client={queryClient}>
       <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
         {props.children}

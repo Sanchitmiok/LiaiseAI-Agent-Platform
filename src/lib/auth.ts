@@ -7,13 +7,13 @@ import * as schema from "@/db/schema"; // your drizzle schema
 import { polar, checkout, portal } from "@polar-sh/better-auth";
 import { polarClient } from "./polar";
 
+//auth ek object hai 
 export const auth = betterAuth({
   plugins: [
     polar({
       client: polarClient,
       createCustomerOnSignUp: true,
       createCustomerOnFirstInteraction: true,
-
       use: [
         checkout({
           authenticatedUsersOnly: true,

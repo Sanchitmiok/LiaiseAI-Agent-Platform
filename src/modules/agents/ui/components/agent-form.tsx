@@ -39,6 +39,8 @@ export function AgentForm({
   const createAgent = useMutation(
     trpc.agents.create.mutationOptions({
       onSuccess: async () => {
+
+        // Invalidate queries to refresh the agent list and free usage data
         await queryClient.invalidateQueries(
           trpc.agents.getMany.queryOptions({})
         );
@@ -119,6 +121,7 @@ export function AgentForm({
           variant="botttsNeutral"
           className="size-16 border"
         />
+
         <FormField
           name="name"
           control={form.control}
@@ -132,6 +135,7 @@ export function AgentForm({
             </FormItem>
           )}
         />
+        
         <FormField
           name="instructions"
           control={form.control}

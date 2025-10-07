@@ -30,6 +30,7 @@ Example:
 - Mention of integration with Z`.trim(),
   model: openai({ model: "gpt-3.5-turbo", apiKey: process.env.OPENAI_API_KEY }),
 });
+
 export const meetingsProcessing = inngest.createFunction(
   { id: "meetings/processing" },
   { event: "meetings/processing" },

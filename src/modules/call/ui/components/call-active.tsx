@@ -10,7 +10,7 @@ interface Props {
 }
 
 
-export const CallActive = ({ onLeave, meetingName }: Props) => {
+export const CallActive = ({ onLeave, meetingName }: Props)=>{
   return (
     <div className="flex flex-col justify-between h-screen  text-white relative overflow-hidden">
       {/* Header */}

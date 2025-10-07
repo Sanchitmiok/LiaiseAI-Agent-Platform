@@ -110,6 +110,7 @@ export async function POST(req: NextRequest) {
       realtimeClient.updateSession({
         instruction: existingAgent.instructions,
       });
+      
     } catch (error) {
       console.error("Failed to connect OpenAI:", error);
       return NextResponse.json(

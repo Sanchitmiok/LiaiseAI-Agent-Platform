@@ -50,7 +50,6 @@ const pricingCardBadgeVariants = cva(
     },
   }
 );
-
 export interface PricingCardProps
   extends VariantProps<typeof pricingCardVariants> {
   badge?: string | null;
